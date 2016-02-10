@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 - 2015, Micro Systems Marc Balmer, CH-5073 Gipf-Oberfrick
+ * Copyright (c) 2011 - 2016, Micro Systems Marc Balmer, CH-5073 Gipf-Oberfrick
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -107,7 +107,12 @@ proxy_map(lua_State *L, lua_State *R, int t, int global)
 		lua_pushboolean(R, lua_toboolean(L, -1));
 		break;
 	case LUA_TNUMBER:
-		lua_pushnumber(R, lua_tonumber(L, -1));
+#if LUA_VERSION_NUM >= 503
+		if (lua_isinteger(L, -1))
+			lua_pushinteger(R, lua_tointeger(L, -1));
+		else
+#endif
+			lua_pushnumber(R, lua_tonumber(L, -1));
 		break;
 	case LUA_TSTRING:
 		lua_pushstring(R, lua_tostring(L, -1));
@@ -145,7 +150,12 @@ proxy_unmap(lua_State *L, lua_State *R)
 		lua_pushboolean(L, lua_toboolean(R, -1));
 		break;
 	case LUA_TNUMBER:
-		lua_pushnumber(L, lua_tonumber(R, -1));
+#if LUA_VERSION_NUM >= 503
+		if (lua_isinteger(R, -1))
+			lua_pushinteger(L, lua_tointeger(R, -1));
+		else
+#endif
+			lua_pushnumber(L, lua_tonumber(R, -1));
 		break;
 	case LUA_TSTRING:
 		lua_pushstring(L, lua_tostring(R, -1));
@@ -199,7 +209,12 @@ object_index(lua_State *L)
 
 	switch (lua_type(L, -1)) {
 	case LUA_TNUMBER:
-		lua_pushnumber(o->L, lua_tonumber(L, -1));
+#if LUA_VERSION_NUM >= 503
+		if (lua_isinteger(L, -1))
+			lua_pushinteger(o->L, lua_tointeger(L, -1));
+		else
+#endif
+			lua_pushnumber(o->L, lua_tonumber(L, -1));
 		break;
 	case LUA_TSTRING:
 		lua_pushstring(o->L, lua_tostring(L, -1));
@@ -276,14 +291,14 @@ static void
 proxy_set_info(lua_State *L)
 {
 	lua_pushliteral(L, "_COPYRIGHT");
-	lua_pushliteral(L, "Copyright (C) 2011 - 2015 by "
+	lua_pushliteral(L, "Copyright (C) 2011 - 2016 by "
 	    "micro systems marc balmer");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "_DESCRIPTION");
 	lua_pushliteral(L, "State proxy for Lua");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "_VERSION");
-	lua_pushliteral(L, "proxy 1.1.3");
+	lua_pushliteral(L, "proxy 1.1.4");
 	lua_settable(L, -3);
 }
 
