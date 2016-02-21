@@ -1,9 +1,12 @@
+-include ../GNUmakefile.inc
+
 SRCS=		luaproxy.c
 LIB=		proxy
 
-LUAVER=		`lua -v 2>&1 | cut -c 5-7`
+LUAVER?=	$(shell lua -v 2>&1 | cut -c 5-7)
+LUAINC?=	/usr/include/lua${LUAVER}
 
-CFLAGS+=	-O3 -Wall -fPIC -I/usr/include -I/usr/include/lua${LUAVER}
+CFLAGS+=	-O3 -Wall -fPIC -I/usr/include -I${LUAINC}
 LDADD+=		-L/usr/lib
 
 LIBDIR=		/usr/lib/lua/${LUAVER}
