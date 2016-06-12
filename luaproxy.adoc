@@ -1,0 +1,28 @@
+Creating And Accessing Lua States
+---------------------------------
+
+The proxy modules allows for new Lua states to be created from an
+existing Lua state and to access data in the other Lua state. Once a
+proxy object has been created, it can be accessed like a regular Lua
+table to set and get variable from the proxied state.
+
+Creating a Lua state
+~~~~~~~~~~~~~~~~~~~~
+
+new()
+^^^^^
+
+Create a new Lua state and return a handle to it.
+
+Accessing a Lua state
+~~~~~~~~~~~~~~~~~~~~~
+
+proxy:dostring(chunk)
+^^^^^^^^^^^^^^^^^^^^^
+
+Execute the Lua chunk in the proxy state.
+
+proxy.variable = value
+^^^^^^^^^^^^^^^^^^^^^^
+
+Set variable in the proxy state to value.
