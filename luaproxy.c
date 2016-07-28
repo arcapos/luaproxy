@@ -122,7 +122,7 @@ proxy_map(lua_State *L, lua_State *R, int t, int global)
 		break;
 	case LUA_TTABLE:
 		top = lua_gettop(L);
-		lua_checkstack(R, 1);
+		luaL_checkstack(R, 1, "out of stack space");
 		lua_newtable(R);
 		lua_pushnil(L);  /* first key */
 		while (lua_next(L, top) != 0) {
