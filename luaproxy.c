@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 - 2016, Micro Systems Marc Balmer, CH-5073 Gipf-Oberfrick
+ * Copyright (c) 2011 - 2017, Micro Systems Marc Balmer, CH-5073 Gipf-Oberfrick
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,6 +88,7 @@ proxy_map(lua_State *L, lua_State *R, int t, int global)
 	int top;
 	char nam[64];
 
+	luaL_checkstack(R, 3, "out of stack space");
 	switch (lua_type(L, -2)) {
 	case LUA_TNUMBER:
 		lua_pushnumber(R, lua_tonumber(L, -2));
@@ -122,7 +123,6 @@ proxy_map(lua_State *L, lua_State *R, int t, int global)
 		break;
 	case LUA_TTABLE:
 		top = lua_gettop(L);
-		luaL_checkstack(R, 1, "out of stack space");
 		lua_newtable(R);
 		lua_pushnil(L);  /* first key */
 		while (lua_next(L, top) != 0) {
@@ -231,6 +231,19 @@ object_index(lua_State *L)
 }
 
 static int
+object_len(lua_State *L)
+{
+	proxy_object *o;
+
+	o = luaL_checkudata(L, -1, OBJECT_METATABLE);
+
+	lua_rawgeti(o->L, LUA_REGISTRYINDEX, o->ref);
+	lua_pushinteger(L, lua_rawlen(o->L, -1));
+	lua_pop(o->L, 1);
+	return 1;
+}
+
+static int
 object_call(lua_State *L)
 {
 	proxy_object *o;
@@ -292,14 +305,14 @@ static void
 proxy_set_info(lua_State *L)
 {
 	lua_pushliteral(L, "_COPYRIGHT");
-	lua_pushliteral(L, "Copyright (C) 2011 - 2016 by "
+	lua_pushliteral(L, "Copyright (C) 2011 - 2017 by "
 	    "micro systems marc balmer");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "_DESCRIPTION");
 	lua_pushliteral(L, "State proxy for Lua");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "_VERSION");
-	lua_pushliteral(L, "proxy 1.1.4");
+	lua_pushliteral(L, "proxy 1.1.5");
 	lua_settable(L, -3);
 }
 
@@ -320,6 +333,7 @@ luaopen_proxy(lua_State *L)
 	struct luaL_Reg object_methods[] = {
 		{ "__index", object_index },
 		{ "__newindex", object_newindex },
+		{ "__len", object_len },
 		{ "__call", object_call },
 		{ "__gc", object_clear },
 		{ NULL, NULL }
