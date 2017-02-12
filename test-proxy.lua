@@ -108,5 +108,5 @@ for n = 1, 110 do
 		threshold = 100
 	}
 end
-
+print('length of p.images', #p.images)
 print('end')
