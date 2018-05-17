@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 - 2012, Micro Systems Marc Balmer, CH-5073 Gipf-Oberfrick
+ * Copyright (c) 2011 - 2017, Micro Systems Marc Balmer, CH-5073 Gipf-Oberfrick
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,8 +30,8 @@
 #ifndef __LUA_PROXY__
 #define __LUA_PROXY__
 
-#define PROXY_METATABLE	"proxy methods"
-#define OBJECT_METATABLE "proxy object methods"
+#define PROXY_METATABLE	"Lua state proxy"
+#define OBJECT_METATABLE "Lua state proxy object"
 
 #define LUA_PROXYLIBNAME "proxy"
 
